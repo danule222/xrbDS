@@ -1,6 +1,8 @@
 #include <nds.h>
 #include <stdio.h>
 
+#include "core/engine.h"
+
 static volatile int frame = 0;
 
 static void Vblank() { frame++; }
@@ -12,15 +14,14 @@ int main(void) {
 
   consoleDemoInit();
 
-  iprintf("      Hello DS dev'rs\n");
-  iprintf("     \x1b[32mwww.devkitpro.org\n");
-  iprintf("   \x1b[32;1mwww.drunkencoders.com\x1b[39m");
+  iprintf("\x1b[4;7HxrbDS Hello World\n");
 
   while (pmMainLoop()) {
     swiWaitForVBlank();
     scanKeys();
     int keys = keysDown();
-    if (keys & KEY_START) break;
+    if (keys & KEY_START)
+      break;
 
     touchRead(&touchXY);
 
