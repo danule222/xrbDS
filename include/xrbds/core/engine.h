@@ -1,15 +1,18 @@
 #ifndef XRBDS_CORE_ENGINE_H
 #define XRBDS_CORE_ENGINE_H
 
-#include <string>
+#include <memory>
+
+#include "graphics/renderer.h"
+
+class MainLoop;
+class Renderer;
 
 class Engine {
 public:
-  Engine();
-  ~Engine();
+  virtual ~Engine() = default;
 
-  // Initialize the engine
-  bool initialize(const std::string &title, int width, int height);
+  static std::unique_ptr<Engine> Create();
 
   // Run the main game loop
   void run();
@@ -23,7 +26,10 @@ private:
   // Internal methods for the game loop
   void processInput();
   void update();
-  void render();
+
+  std::unique_ptr<Renderer> renderer;
+
+  Engine();
 };
 
 #endif // XRBDS_CORE_ENGINE_H
