@@ -5,6 +5,7 @@
 
 #include "graphics/renderer.h"
 
+class Input;
 class MainLoop;
 class Renderer;
 
@@ -17,17 +18,14 @@ public:
   // Run the main game loop
   void run();
 
-  // Shutdown the engine
-  void shutdown();
-
 private:
-  bool isRunning;
+  std::unique_ptr<Renderer> renderer;
+  std::unique_ptr<Input> input;
 
   // Internal methods for the game loop
   void processInput();
   void update();
-
-  std::unique_ptr<Renderer> renderer;
+  void render();
 
   Engine();
 };

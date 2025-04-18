@@ -1,8 +1,11 @@
 #include "core/engine.h"
 
+#include <memory>
+
 #include <nds.h>
 #include <stdio.h>
-#include <memory>
+
+#include "input/input.h"
 
 // Main program function
 int main(void) {
@@ -12,7 +15,6 @@ int main(void) {
     exit(1);
 
   engine->run();
-  engine->shutdown();
 
   return 0;
 }
@@ -22,36 +24,34 @@ std::unique_ptr<Engine> Engine::Create() {
 }
 
 void Engine::run() {
-  isRunning = true;
-
   while (pmMainLoop()) {
     processInput();
     update();
-    renderer->render();
+    render();
 
     swiWaitForVBlank();
   }
 }
 
-void Engine::shutdown() { isRunning = false; }
-
-void Engine::processInput() {
-  scanKeys();
-  int keys = keysDown();
-}
+void Engine::processInput() { input->update(); }
 
 void Engine::update() {
   // Update
 }
 
+void Engine::render() { renderer->render(); }
+
 Engine::Engine() {
-  isRunning = false;
-
-  // Debug
-  // consoleDemoInit();
-
   // Initialize the graphics renderer
   renderer = Renderer::Create();
   if (!renderer)
     exit(2);
+
+  // Initialize the input system
+  input = Input::Create();
+  if (!input)
+    exit(3);
+
+  // Debug
+  consoleDemoInit();
 }
