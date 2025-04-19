@@ -3,25 +3,21 @@
 #include <nds.h>
 #include <stdio.h>
 
-Input::Input() {
-  // Initialize input system
-  scanKeys();
-}
+// Static members
+u32 Input::KeysHeldState = 0;
+u32 Input::KeysDownState = 0;
+u32 Input::KeysUpState = 0;
 
-std::unique_ptr<Input> Input::Create() {
-  return std::unique_ptr<Input>(new Input());
-}
-
-void Input::update() {
+void Input::Update() {
   // Update key states
   scanKeys();
-  keysHeldState = keysHeld();
-  keysDownState = keysDown();
-  keysUpState = keysUp();
+  KeysHeldState = keysHeld();
+  KeysDownState = keysDown();
+  KeysUpState = keysUp();
 }
 
-bool Input::isKeyHeld(EKey key) const { return keysHeldState & key; }
+bool Input::IsKeyHeld(EKey key) { return KeysHeldState & key; }
 
-bool Input::isKeyDown(EKey key) const { return keysDownState & key; }
+bool Input::IsKeyDown(EKey key) { return KeysDownState & key; }
 
-bool Input::isKeyUp(EKey key) const { return keysUpState & key; }
+bool Input::IsKeyUp(EKey key) { return KeysUpState & key; }

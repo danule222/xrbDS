@@ -3,19 +3,27 @@
 #include <nds.h>
 #include <stdio.h>
 
-std::unique_ptr<Renderer> Renderer::Create() {
-  return std::unique_ptr<Renderer>(new Renderer());
+#include "input/input.h"
+
+std::unique_ptr<Renderer> Renderer::Instance;
+float Renderer::pos = -4.0f;
+
+std::unique_ptr<Renderer> &Renderer::GetInstance() {
+  if (!Instance)
+    Instance = std::unique_ptr<Renderer>(new Renderer());
+
+  return Instance;
 }
 
 void Renderer::render() {
-  // clearScreen();    // Clear the screen
+  clearScreen();    // Clear the screen
   beginFrame();     // Prepare for rendering
   glLoadIdentity(); // Load the identity matrix
 
   // Render scene
-  glTranslatef(0.0f, 0.0f, -4.0f); // Move the camera back
-  glRotatef(45, 1, 1, 0);          // Rotation
-  drawCube(1.0f);                  // Draw a cube
+  glTranslatef(0.0f, 0.0f, pos); // Move the camera back
+  glRotatef(45, 1, 1, 0);        // Rotation
+  drawCube(1.0f);                // Draw a cube
 
   endFrame(); // Finish rendering
 }
@@ -102,4 +110,7 @@ Renderer::Renderer() {
   glClearPolyID(63);          // Set default polygon ID
   glClearDepth(GL_MAX_DEPTH); // Set clear depth
   glViewport(0, 0, 255, 191); // Set viewport
+
+  // Debug
+  consoleDemoInit();
 }
