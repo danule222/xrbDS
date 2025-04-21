@@ -27,11 +27,31 @@
 #ifndef XRBDS_INPUT_H
 #define XRBDS_INPUT_H
 
-#include <memory>
+#include "core/types.h"
 
-#include <calico/types.h>
+#include <memory>
 #include <nds/input.h>
 
+/**
+ * @enum EKey
+ * @brief Represents the keys available on the NDS platform.
+ *
+ * This enumeration defines constants for each key on the NDS system, mapping
+ * them to their corresponding platform-specific key codes.
+ *
+ * The keys include standard buttons such as A, B, X, Y, L, R, directional
+ * buttons (UP, DOWN, LEFT, RIGHT), and system buttons (START, SELECT, HINGE).
+ *
+ * Example usage:
+ * @code
+ * if (Input::IsKeyDown(EKey::A)) {
+ *     // Handle A button press
+ * }
+ * @endcode
+ *
+ * @note These key codes are specific to the NDS platform and rely on the
+ * platform's key definitions.
+ */
 enum EKey : u16 {
   A = KEY_A,
   B = KEY_B,

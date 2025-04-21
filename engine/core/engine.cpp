@@ -9,6 +9,8 @@
 #include "component_manager.h"
 #include "object.h"
 #include "components/transform.h"
+#include "components/mesh_filter.h"
+#include "graphics/renderer.h"
 
 /////////////////////////////////////////////////////////
 // Main function
@@ -16,10 +18,11 @@
 
 int main(void) {
   // Initialize engine
-  std::unique_ptr<Engine> &engine = Engine::GetInstance();
+  PtrUnq<Engine> &engine = Engine::GetInstance();
   if (!engine)
     exit(1);
 
+  // Main loop
   engine->run();
 
   return 0;
@@ -27,13 +30,13 @@ int main(void) {
 
 /////////////////////////////////////////////////////////
 
-std::unique_ptr<Engine> Engine::Instance;
+PtrUnq<Engine> Engine::Instance;
 
 Engine::~Engine() { irqSet(IRQ_VBLANK, nullptr); }
 
-std::unique_ptr<Engine> &Engine::GetInstance() {
+PtrUnq<Engine> &Engine::GetInstance() {
   if (!Instance)
-    Instance = std::unique_ptr<Engine>(new Engine());
+    Instance = PtrUnq<Engine>(new Engine());
 
   return Instance;
 }
@@ -45,10 +48,19 @@ void Engine::run() {
   VblankCallback();
 
   // TEST - Create an entity and add a component
-  Entity entity = ComponentManager::GetInstance()->newEntity();
+  FEntity entity = ComponentManager::GetInstance()->newEntity();
   Transform transform({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
                       {1.0f, 1.0f, 1.0f});
   ComponentManager::GetInstance()->addComponent(entity, transform);
+  MeshFilter meshFilter("example_mesh");
+  ComponentManager::GetInstance()->addComponent(entity, meshFilter);
+
+  // TEST - Loop trough selected components
+  auto view = ComponentManager::GetInstance()->view<MeshFilter, Transform>();
+
+  for (auto &[entity, mesh, transform] : view) {
+    printf("Entity: %d, Mesh: %p, Transform: %p\n", entity, mesh, transform);
+  }
 
   while (pmMainLoop()) {
     processInput();

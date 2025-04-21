@@ -1,10 +1,10 @@
 #include "component_manager.h"
 
-std::unique_ptr<ComponentManager> ComponentManager::Instance;
+PtrUnq<ComponentManager> ComponentManager::Instance;
 
-std::unique_ptr<ComponentManager> &ComponentManager::GetInstance() {
+PtrUnq<ComponentManager> &ComponentManager::GetInstance() {
   if (!Instance)
-    Instance = std::unique_ptr<ComponentManager>(new ComponentManager());
+    Instance = PtrUnq<ComponentManager>(new ComponentManager());
 
   return Instance;
 }

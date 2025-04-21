@@ -22,7 +22,7 @@
 
 #include <memory>
 
-#include "graphics/renderer.h"
+#include "core/types.h"
 
 /**
  * @class Engine
@@ -40,7 +40,7 @@ public:
    * @brief Retrieve the singleton instance of the Engine.
    * @return A reference to the unique pointer holding the Engine instance.
    */
-  static std::unique_ptr<Engine> &GetInstance();
+  static PtrUnq<Engine> &GetInstance();
 
   /**
    * @brief Run the main game loop.
@@ -51,7 +51,7 @@ private:
   /**
    * @brief Singleton instance of the Engine.
    */
-  static std::unique_ptr<Engine> Instance;
+  static PtrUnq<Engine> Instance;
 
   /**
    * @brief Callback function for vertical blanking interval.

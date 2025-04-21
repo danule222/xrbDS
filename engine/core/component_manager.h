@@ -9,37 +9,35 @@
 #include <unordered_set>
 #include <cstdint>
 
-#include <calico/types.h>
-
-#define Entity u32
+#include "core/types.h"
 
 class ComponentManager {
 public:
   ~ComponentManager() = default;
 
-  static std::unique_ptr<ComponentManager> &GetInstance();
+  static PtrUnq<ComponentManager> &GetInstance();
 
-  Entity newEntity() {
-    Entity entityID = nextEntityID++;
+  FEntity newEntity() {
+    FEntity entityID = nextEntityID++;
     activeEntities.insert(entityID);
     return entityID;
   }
 
-  void removeEntity(Entity entityID) {
+  void removeEntity(FEntity entityID) {
     if (activeEntities.erase(entityID) > 0) {
       removeAllComponents(entityID);
     }
   }
 
   template <typename ComponentType>
-  void addComponent(Entity entityID, const ComponentType &component) {
+  void addComponent(FEntity entityID, const ComponentType &component) {
     auto &componentMap = getComponentMap<ComponentType>();
     componentMap[entityID] =
         std::make_shared<ComponentType>(std::move(component));
   }
 
   template <typename ComponentType>
-  std::shared_ptr<ComponentType> getComponent(Entity entityID) {
+  PtrShr<ComponentType> getComponent(FEntity entityID) {
     auto &componentMap = getComponentMap<ComponentType>();
     auto it = componentMap.find(entityID);
     if (it != componentMap.end()) {
@@ -48,12 +46,12 @@ public:
     return nullptr;
   }
 
-  template <typename ComponentType> void removeComponent(Entity entityID) {
+  template <typename ComponentType> void removeComponent(FEntity entityID) {
     auto &componentMap = getComponentMap<ComponentType>();
     componentMap.erase(entityID);
   }
 
-  void removeAllComponents(Entity entityID) {
+  void removeAllComponents(FEntity entityID) {
     for (auto &pair : componentPools) {
       pair.second->remove(entityID);
     }
@@ -67,28 +65,50 @@ public:
     return getComponentMap<ComponentType>().end();
   }
 
+  template <typename... Components>
+  TVector<std::tuple<FEntity, Components *...>> view() {
+    TVector<std::tuple<FEntity, Components *...>> result;
+
+    if constexpr (sizeof...(Components) == 0)
+      return result;
+
+    auto &baseMap =
+        getComponentMap<std::tuple_element_t<0, std::tuple<Components...>>>();
+
+    for (auto &[entityID, baseComp] : baseMap) {
+      if ((getComponent<Components>(entityID) && ...)) {
+        result.emplace_back(entityID,
+                            getComponent<Components>(entityID).get()...);
+      }
+    }
+
+    return result;
+  }
+
 private:
   ComponentManager() = default;
 
   ComponentManager(const ComponentManager &) = delete;
   ComponentManager &operator=(const ComponentManager &) = delete;
 
-  static std::unique_ptr<ComponentManager> Instance;
-
   struct IComponentPool {
     virtual ~IComponentPool() = default;
-    virtual void remove(Entity entityID) = 0;
+    virtual void remove(FEntity entityID) = 0;
   };
 
-  template <typename ComponentType> struct ComponentPool : IComponentPool {
-    std::unordered_map<Entity, std::shared_ptr<ComponentType>> components;
+  static PtrUnq<ComponentManager> Instance;
+  std::unordered_map<std::type_index, PtrUnq<IComponentPool>> componentPools;
+  std::unordered_set<FEntity> activeEntities;
+  FEntity nextEntityID = 0;
 
-    void remove(Entity entityID) override { components.erase(entityID); }
+  template <typename ComponentType> struct ComponentPool : IComponentPool {
+    std::unordered_map<FEntity, PtrShr<ComponentType>> components;
+
+    void remove(FEntity entityID) override { components.erase(entityID); }
   };
 
   template <typename ComponentType>
-  std::unordered_map<Entity, std::shared_ptr<ComponentType>> &
-  getComponentMap() {
+  std::unordered_map<FEntity, PtrShr<ComponentType>> &getComponentMap() {
     std::type_index typeIndex(typeid(ComponentType));
     if (componentPools.find(typeIndex) == componentPools.end()) {
       componentPools[typeIndex] =
@@ -98,11 +118,6 @@ private:
                componentPools[typeIndex].get())
         ->components;
   }
-
-  std::unordered_map<std::type_index, std::unique_ptr<IComponentPool>>
-      componentPools;
-  std::unordered_set<Entity> activeEntities;
-  Entity nextEntityID = 0;
 };
 
 #endif // COMPONENT_MANAGER_H
