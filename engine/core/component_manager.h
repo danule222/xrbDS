@@ -30,7 +30,7 @@ public:
   }
 
   template <typename ComponentType>
-  void addComponent(FEntity entityID, const ComponentType &component) {
+  void addComponent(FEntity entityID, const ComponentType component) {
     auto &componentMap = getComponentMap<ComponentType>();
     componentMap[entityID] =
         std::make_shared<ComponentType>(std::move(component));

@@ -3,14 +3,15 @@
 #include <memory>
 
 #include <nds.h>
-#include <stdio.h>
+#include <filesystem.h>
 
 #include "input/input.h"
 #include "component_manager.h"
-#include "object.h"
 #include "components/transform.h"
 #include "components/mesh_filter.h"
 #include "graphics/renderer.h"
+#include "scene/3d/node_3d.h"
+#include "utils/file.h"
 
 /////////////////////////////////////////////////////////
 // Main function
@@ -47,20 +48,15 @@ void Engine::run() {
   irqSet(IRQ_VBLANK, Engine::VblankCallback);
   VblankCallback();
 
-  // TEST - Create an entity and add a component
-  FEntity entity = ComponentManager::GetInstance()->newEntity();
-  Transform transform({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
-                      {1.0f, 1.0f, 1.0f});
-  ComponentManager::GetInstance()->addComponent(entity, transform);
-  MeshFilter meshFilter("example_mesh");
-  ComponentManager::GetInstance()->addComponent(entity, meshFilter);
+  // TEST ------------------------
 
-  // TEST - Loop trough selected components
-  auto view = ComponentManager::GetInstance()->view<MeshFilter, Transform>();
+  PtrShr<Node3D> node = NewNode<Node3D>();
+  node->getComponent<Transform>()->position = {1.0f, 2.0f, 3.0f};
 
-  for (auto &[entity, mesh, transform] : view) {
-    printf("Entity: %d, Mesh: %p, Transform: %p\n", entity, mesh, transform);
-  }
+  FString ahuevo = Utils::File::ReadTextFile("hola.txt");
+  iprintf("ahuevo: %s\n", ahuevo.c_str());
+
+  // -----------------------------
 
   while (pmMainLoop()) {
     processInput();
@@ -78,4 +74,11 @@ void Engine::render() { Renderer::GetInstance()->render(); }
 
 void Engine::VblankCallback() { Engine::GetInstance()->render(); }
 
-Engine::Engine() {}
+Engine::Engine() {
+  // Initialize nitroFS
+  char nitroFSPath[32];
+  strcpy(nitroFSPath, "assets");
+  char *nitroFSPathptr = nitroFSPath;
+  if (!nitroFSInit(&nitroFSPathptr))
+    exit(-1);
+}

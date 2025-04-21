@@ -21,6 +21,7 @@
 #include <calico/types.h>
 #include <array>
 #include <vector>
+#include <string>
 
 /////////////////////////////////////
 // MEMORY

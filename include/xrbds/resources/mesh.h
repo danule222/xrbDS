@@ -1,6 +1,7 @@
 #ifndef XRBDS_RESOURCES_MESH_H
 #define XRBDS_RESOURCES_MESH_H
 
+#include "resource.h"
 #include "core/types.h"
 
 #include <vector>
@@ -14,15 +15,15 @@ struct Vertex {
       : position(pos), normal(norm), texCoords(tex) {}
 };
 
-class Mesh {
+class Mesh : public Resource {
 public:
-  static PtrShr<Mesh> Load(std::string path);
+  static PtrShr<Mesh> Load(FString path);
 
   const TVector<Vertex> &getVertices() const;
   const TVector<unsigned int> &getIndices() const;
 
-  void setVertices(const std::vector<Vertex> &vertices);
-  void setIndices(const std::vector<unsigned int> &indices);
+  void setVertices(const TVector<Vertex> &vertices);
+  void setIndices(const TVector<unsigned int> &indices);
 
 private:
   TVector<Vertex> m_vertices;
