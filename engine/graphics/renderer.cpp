@@ -3,10 +3,7 @@
 #include <nds.h>
 #include <stdio.h>
 
-#include "input/input.h"
-
 std::unique_ptr<Renderer> Renderer::Instance;
-float Renderer::pos = -4.0f;
 
 std::unique_ptr<Renderer> &Renderer::GetInstance() {
   if (!Instance)
@@ -21,9 +18,9 @@ void Renderer::render() {
   glLoadIdentity(); // Load the identity matrix
 
   // Render scene
-  glTranslatef(0.0f, 0.0f, pos); // Move the camera back
-  glRotatef(45, 1, 1, 0);        // Rotation
-  drawCube(1.0f);                // Draw a cube
+  glTranslatef(0.f, 0.f, -4.f); // Move the camera back
+  glRotatef(45, 1, 1, 0);       // Rotation
+  drawCube(1.0f);               // Draw a cube
 
   endFrame(); // Finish rendering
 }

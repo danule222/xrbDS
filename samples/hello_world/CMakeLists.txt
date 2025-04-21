@@ -1,9 +1,12 @@
+project(hello_world)
+
 add_executable(hello_world
     hello_world.cpp
 )
 
 target_link_libraries(hello_world
     xrbds
+    glm::glm
 )
 
 # Project specific settings

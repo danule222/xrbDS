@@ -15,4 +15,10 @@ add_library(xrbds
   ${SOURCES}
 )
 
+list(APPEND CMAKE_PREFIX_PATH "build")
+
+find_package(glm REQUIRED)
+
+target_link_libraries(xrbds PRIVATE glm::glm)
+
 add_subdirectory(samples/hello_world)

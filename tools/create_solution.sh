@@ -1,28 +1,25 @@
 #!/bin/bash
 
-DIR="../build"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+BUILD_DIR="$PROJECT_ROOT/build"
 
-if [ ! -d $DIR ]; then
-  mkdir $DIR
+WORKING_DIR_NAME="$(basename "$SCRIPT_DIR")"
+
+if [ ! -d "$BUILD_DIR" ]; then
+  mkdir "$BUILD_DIR" || {
+    echo "build/ directory could not be created. Exiting..."
+    exit 3
+  }
 fi
 
-if [ ! -d $DIR ]; then
-  echo "Failed to create build directory"
-  exit 3
-fi
+echo "Installing Conan dependencies..."
+conan install "$PROJECT_ROOT" \
+  --profile:host=nds \
+  --profile:build=nds \
+  --build=missing \
+  --output-folder="$BUILD_DIR"
 
-if [ ! -d $DEVKITPRO ]; then
-  echo "Please set DEVKITPRO environment variable"
-  exit 2
-fi
-
-working_dir_name="$(basename "$PWD")"
-
-if [ "$working_dir_name" = "tools" ]; then
-  echo "Creating solution..."
-else
-  echo "Please run this script from the tools directory"
-  exit 1
-fi
-
-$DEVKITPRO/portlibs/nds/bin/arm-none-eabi-cmake -S .. -B $DIR
+echo "Generating CMake solution..."
+cd "$PROJECT_ROOT" || exit 1
+cmake --preset conan-release

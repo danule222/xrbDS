@@ -39,3 +39,6 @@ build/
 *.exe
 *.out
 *.app
+
+# CMake files
+CMakeUserPresets.json

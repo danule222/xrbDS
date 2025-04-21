@@ -9,6 +9,8 @@ public:
   virtual void update();
   virtual void render();
 
+  virtual void test() { iprintf("Object::test\n"); };
+
 protected:
   int id;
 };

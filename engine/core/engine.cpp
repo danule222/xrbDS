@@ -6,6 +6,9 @@
 #include <stdio.h>
 
 #include "input/input.h"
+#include "component_manager.h"
+#include "object.h"
+#include "components/transform.h"
 
 /////////////////////////////////////////////////////////
 // Main function
@@ -37,7 +40,15 @@ std::unique_ptr<Engine> &Engine::GetInstance() {
 
 void Engine::run() {
   // Initialize the main loop
+  // - VBlank IRQ
   irqSet(IRQ_VBLANK, Engine::VblankCallback);
+  VblankCallback();
+
+  // TEST - Create an entity and add a component
+  Entity entity = ComponentManager::GetInstance()->newEntity();
+  Transform transform({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
+                      {1.0f, 1.0f, 1.0f});
+  ComponentManager::GetInstance()->addComponent(entity, transform);
 
   while (pmMainLoop()) {
     processInput();

@@ -24,10 +24,6 @@
 
 #include "graphics/renderer.h"
 
-class Input;
-class MainLoop;
-class Renderer;
-
 /**
  * @class Engine
  * @brief Core engine class responsible for managing the game loop and

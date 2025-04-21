@@ -34,8 +34,6 @@
  */
 class Renderer {
 public:
-  static float pos;
-
   /**
    * @brief Virtual destructor for the Renderer class.
    *
