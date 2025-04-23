@@ -1,8 +1,11 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
+#include "core/types.h"
+
 struct Component {
-  virtual ~Component() = default;
+public:
+  static PtrUnq<Component> Initialize();
 };
 
 #endif // COMPONENT_H

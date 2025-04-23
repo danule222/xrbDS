@@ -23,7 +23,11 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include "core/types.h"
 #include <memory>
+
+struct Transform;
+struct MeshFilter;
 
 /**
  * @class Renderer
@@ -46,7 +50,14 @@ public:
    *
    * @return A unique pointer to a Renderer instance.
    */
-  static std::unique_ptr<Renderer> &GetInstance();
+  static PtrUnq<Renderer> &GetInstance();
+
+  /**
+   * @brief Prepares the renderer for a new frame.
+   *
+   * This method is called at the beginning of the rendering process.
+   */
+  void beginFrame();
 
   /**
    * @brief Renders the current frame.
@@ -54,15 +65,7 @@ public:
    * This method handles the rendering process, including frame management
    * and drawing operations.
    */
-  void render();
-
-private:
-  /**
-   * @brief Prepares the renderer for a new frame.
-   *
-   * This method is called at the beginning of the rendering process.
-   */
-  void beginFrame();
+  void render(const Transform &transform, const MeshFilter &meshFilter);
 
   /**
    * @brief Finalizes the rendering of the current frame.
@@ -72,21 +75,22 @@ private:
   void endFrame();
 
   /**
-   * @brief Clears the screen to prepare for rendering.
-   *
-   * This method resets the screen to a default state, typically clearing
-   * any previous drawings.
-   */
-  void clearScreen();
-
-  /**
    * @brief Draws a cube of the specified size.
    *
    * @param size The size of the cube to be drawn.
    */
   void drawCube(float size);
 
-  static std::unique_ptr<Renderer> Instance;
+private:
+  static PtrUnq<Renderer> Instance;
+
+  /**
+   * @brief Clears the screen to prepare for rendering.
+   *
+   * This method resets the screen to a default state, typically clearing
+   * any previous drawings.
+   */
+  void clearScreen();
 
   /**
    * @brief Constructor for the Renderer class.

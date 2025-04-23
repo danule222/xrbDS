@@ -12,6 +12,7 @@
 #include "graphics/renderer.h"
 #include "scene/3d/node_3d.h"
 #include "utils/file.h"
+#include "scene/3d/mesh_instance_3d.h"
 
 /////////////////////////////////////////////////////////
 // Main function
@@ -43,24 +44,18 @@ PtrUnq<Engine> &Engine::GetInstance() {
 }
 
 void Engine::run() {
-  // Initialize the main loop
-  // - VBlank IRQ
-  irqSet(IRQ_VBLANK, Engine::VblankCallback);
-  VblankCallback();
-
   // TEST ------------------------
 
-  PtrShr<Node3D> node = NewNode<Node3D>();
-  node->getComponent<Transform>()->position = {1.0f, 2.0f, 3.0f};
-
-  FString ahuevo = Utils::File::ReadTextFile("hola.txt");
-  iprintf("ahuevo: %s\n", ahuevo.c_str());
+  // Create a MeshInstance3D
+  PtrShr<MeshInstance3D> meshInstance =
+      NewNode<MeshInstance3D>("meshes/mococo/mococo.obj");
 
   // -----------------------------
 
   while (pmMainLoop()) {
     processInput();
     update();
+    render();
   }
 }
 
@@ -70,9 +65,22 @@ void Engine::update() {
   // Update
 }
 
-void Engine::render() { Renderer::GetInstance()->render(); }
+void Engine::render() {
+  if (!ComponentManager::GetInstance())
+    return;
+  PtrUnq<Renderer> &renderer = Renderer::GetInstance();
 
-void Engine::VblankCallback() { Engine::GetInstance()->render(); }
+  renderer->beginFrame();
+
+  auto view = ComponentManager::GetInstance()->view<Transform, MeshFilter>();
+  for (auto &[entity, transform, meshFilter] : view) {
+    renderer->render(*transform, *meshFilter);
+  }
+
+  renderer->endFrame();
+
+  swiWaitForVBlank();
+}
 
 Engine::Engine() {
   // Initialize nitroFS

@@ -2,7 +2,7 @@
 
 #include "components/mesh_filter.h"
 
-MeshInstance3D::MeshInstance3D() {
-  ComponentManager::GetInstance()->addComponent<MeshFilter>(id,
-                                                            MeshFilter("test"));
+MeshInstance3D::MeshInstance3D(const FString &path) {
+  ComponentManager::GetInstance()->addComponent<MeshFilter>(
+      id, *MeshFilter::Initialize(path));
 }

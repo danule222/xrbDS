@@ -1,28 +1,19 @@
 #include "renderer.h"
 
+#include "core/types.h"
+#include "components/mesh_filter.h"
+#include "components/transform.h"
+#include "resources/mesh.h"
 #include <nds.h>
 #include <stdio.h>
 
-std::unique_ptr<Renderer> Renderer::Instance;
+PtrUnq<Renderer> Renderer::Instance;
 
-std::unique_ptr<Renderer> &Renderer::GetInstance() {
+PtrUnq<Renderer> &Renderer::GetInstance() {
   if (!Instance)
-    Instance = std::unique_ptr<Renderer>(new Renderer());
+    Instance = PtrUnq<Renderer>(new Renderer());
 
   return Instance;
-}
-
-void Renderer::render() {
-  clearScreen();    // Clear the screen
-  beginFrame();     // Prepare for rendering
-  glLoadIdentity(); // Load the identity matrix
-
-  // Render scene
-  glTranslatef(0.f, 0.f, -4.f); // Move the camera back
-  glRotatef(45, 1, 1, 0);       // Rotation
-  drawCube(1.0f);               // Draw a cube
-
-  endFrame(); // Finish rendering
 }
 
 void Renderer::beginFrame() {
@@ -34,6 +25,30 @@ void Renderer::beginFrame() {
   glPushMatrix(); // Save the current matrix state
 
   glPolyFmt(POLY_ALPHA(31) | POLY_CULL_BACK);
+
+  glLoadIdentity(); // Load the identity matrix
+
+  // Render scene
+  glTranslatef(0.f, 0.f, -4.f); // Move the camera back
+  glRotatef(45, 1, 1, 0);       // Rotation
+}
+
+void Renderer::render(const Transform &transform,
+                      const MeshFilter &meshFilter) {
+  // drawCube(1.0f); // Draw a cube
+  glBegin(GL_TRIANGLES);
+
+  for (const auto &shapes : meshFilter.getMesh()->getVertices()) {
+    for (const auto &vertex : shapes) {
+      glColor3f(1.0, 0.0, 0.0); // Red
+      glVertex3f(vertex.position.x, vertex.position.y, vertex.position.z);
+      glNormal3f(vertex.normal.x, vertex.normal.y, vertex.normal.z);
+      glTexCoord2f(vertex.texCoords.x, vertex.texCoords.y);
+    }
+  }
+
+  glEnd();
+  glPopMatrix(1);
 }
 
 void Renderer::endFrame() {

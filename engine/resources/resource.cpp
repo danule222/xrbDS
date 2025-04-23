@@ -1,6 +1,3 @@
 #include "resources/resource.h"
 
-Resource::Resource(const FString &name, const FString &path)
-    : name(name), path(path) {
-  // Constructor implementation
-}
+Resource Resource::Load() { return std::move(Resource()); }

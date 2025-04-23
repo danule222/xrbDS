@@ -5,6 +5,7 @@ project(xrbDS)
 include_directories(
   engine
   include/xrbds
+  include/tinyobjloader
 )
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS

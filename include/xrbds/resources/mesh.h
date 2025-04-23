@@ -6,32 +6,28 @@
 
 #include <vector>
 
-struct Vertex {
+struct FVertex {
   FVector3 position;
   FVector3 normal;
   FVector2 texCoords;
 
-  Vertex(const FVector3 &pos, const FVector3 &norm, const FVector2 &tex)
+  FVertex(const FVector3 &pos, const FVector3 &norm, const FVector2 &tex)
       : position(pos), normal(norm), texCoords(tex) {}
 };
 
 class Mesh : public Resource {
+  using Super = Resource;
+
 public:
-  static PtrShr<Mesh> Load(FString path);
+  static Mesh Load(const TVector<TVector<FVertex>> &vertices);
 
-  const TVector<Vertex> &getVertices() const;
-  const TVector<unsigned int> &getIndices() const;
-
-  void setVertices(const TVector<Vertex> &vertices);
-  void setIndices(const TVector<unsigned int> &indices);
+  TVector<TVector<FVertex>> getVertices() const { return vertices; }
 
 private:
-  TVector<Vertex> m_vertices;
-  TVector<unsigned int> m_indices;
+  TVector<TVector<FVertex>> vertices;
 
-  Mesh() = delete;
-  Mesh(const Mesh &) = delete;
-  Mesh(const TVector<Vertex> &vertices, const TVector<unsigned int> &indices);
+  Mesh() = default;
+  Mesh(const TVector<TVector<FVertex>> &vertices);
 };
 
 #endif // XRBDS_RESOURCES_MESH_H

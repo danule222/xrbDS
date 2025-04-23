@@ -1,0 +1,12 @@
+# Blender 4.4.1 MTL File: 'mococo.blend'
+# www.blender.org
+
+newmtl mococo_mat
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 1
+map_Kd mococotexture_face1.png
+map_d mococotexture_face1.png

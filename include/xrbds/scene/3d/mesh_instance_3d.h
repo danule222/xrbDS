@@ -9,7 +9,7 @@ public:
   using Super = Node3D;
 
 public:
-  MeshInstance3D();
+  MeshInstance3D(const FString &path);
 };
 
 #endif // XRBDS_SCENE_3D_MESH_INSTANCE_H

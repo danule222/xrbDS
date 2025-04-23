@@ -8,11 +8,14 @@ class Mesh;
 
 struct MeshFilter : public Component {
 public:
-  MeshFilter(const FString &name);
+  static PtrUnq<MeshFilter> Initialize(const FString &path);
+
+  PtrShr<Mesh> getMesh() const { return mesh; }
 
 private:
-  FString meshName;
   PtrShr<Mesh> mesh;
+
+  MeshFilter(const FString &path);
 };
 
 #endif // MESH_FILTER_H

@@ -9,7 +9,7 @@
 *.slo
 *.lo
 *.o
-*.obj
+build/*.obj
 *.elf
 *.lst
 *.nds
