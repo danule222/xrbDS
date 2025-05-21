@@ -6,7 +6,7 @@
  *
  * This header defines the Input class, which provides static methods to query
  * the state of keys (held, pressed, or released) on the system. It also defines
- * the EKey enumeration for representing individual keys.
+ * the EButton enumeration for representing individual keys.
  *
  * The Input class is designed as a utility class and cannot be instantiated.
  * It maintains internal states for keys and provides methods to update and
@@ -14,8 +14,8 @@
  *
  * Usage:
  * - Call Input::Update() periodically to refresh the key states.
- * - Use Input::IsKeyHeld(), Input::IsKeyDown(), or Input::IsKeyUp() to query
- *   the state of specific keys.
+ * - Use Input::IsButtonHeld(), Input::IsButtonDown(), or Input::IsButtonUp() to
+ * query the state of specific keys.
  *
  * @author Daniel Ramirez Morilla
  * @date 2025-04-19
@@ -33,7 +33,7 @@
 #include <nds/input.h>
 
 /**
- * @enum EKey
+ * @enum EButton
  * @brief Represents the keys available on the NDS platform.
  *
  * This enumeration defines constants for each key on the NDS system, mapping
@@ -44,7 +44,7 @@
  *
  * Example usage:
  * @code
- * if (Input::IsKeyDown(EKey::A)) {
+ * if (Input::IsButtonDown(EButton::A)) {
  *     // Handle A button press
  * }
  * @endcode
@@ -52,7 +52,7 @@
  * @note These key codes are specific to the NDS platform and rely on the
  * platform's key definitions.
  */
-enum EKey : u16 {
+enum EButton : u16 {
   A = KEY_A,
   B = KEY_B,
   X = KEY_X,
@@ -70,9 +70,9 @@ enum EKey : u16 {
 
 /**
  * @class Input
- * @brief Provides static methods to handle input states for keys.
+ * @brief Provides static methods to handle input states for buttons.
  *
- * The Input class is a utility class that allows querying the state of keys
+ * The Input class is a utility class that allows querying the state of buttons
  * (held, pressed, or released) using static methods. It is not meant to be
  * instantiated.
  */
@@ -81,46 +81,47 @@ public:
   /**
    * @brief Updates the internal state of the input system.
    *
-   * This method should be called periodically to refresh the key states.
+   * This method should be called periodically to refresh the button states.
    */
   static void Update();
 
   /**
-   * @brief Checks if a specific key is currently being held down.
-   * @param key The key to check.
-   * @return True if the key is held down, false otherwise.
+   * @brief Checks if a specific button is currently being held down.
+   * @param button The button to check.
+   * @return True if the button is held down, false otherwise.
    */
-  static bool IsKeyHeld(EKey key);
+  static bool IsButtonHeld(EButton button);
 
   /**
-   * @brief Checks if a specific key was pressed in the current update cycle.
-   * @param key The key to check.
-   * @return True if the key was pressed, false otherwise.
+   * @brief Checks if a specific button was pressed in the current update cycle.
+   * @param button The button to check.
+   * @return True if the button was pressed, false otherwise.
    */
-  static bool IsKeyDown(EKey key);
+  static bool IsButtonDown(EButton button);
 
   /**
-   * @brief Checks if a specific key was released in the current update cycle.
-   * @param key The key to check.
-   * @return True if the key was released, false otherwise.
+   * @brief Checks if a specific button was released in the current update
+   * cycle.
+   * @param button The button to check.
+   * @return True if the button was released, false otherwise.
    */
-  static bool IsKeyUp(EKey key);
+  static bool IsButtonUp(EButton button);
 
 private:
   /**
-   * @brief Stores the state of keys currently being held down.
+   * @brief Stores the state of buttons currently being held down.
    */
-  static u32 KeysHeldState;
+  static u32 ButtonsHeldState;
 
   /**
-   * @brief Stores the state of keys pressed in the current update cycle.
+   * @brief Stores the state of buttons pressed in the current update cycle.
    */
-  static u32 KeysDownState;
+  static u32 ButtonsDownState;
 
   /**
-   * @brief Stores the state of keys released in the current update cycle.
+   * @brief Stores the state of buttons released in the current update cycle.
    */
-  static u32 KeysUpState;
+  static u32 ButtonsUpState;
 
   /**
    * @brief Deleted constructor to prevent instantiation of the Input class.

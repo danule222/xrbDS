@@ -44,11 +44,18 @@ PtrUnq<Engine> &Engine::GetInstance() {
 }
 
 void Engine::run() {
-  // TEST ------------------------
+  Renderer::GetInstance();
 
+  // TEST ------------------------
   // Create a MeshInstance3D
   PtrShr<MeshInstance3D> meshInstance =
       NewNode<MeshInstance3D>("meshes/mococo/mococo.obj");
+
+  // PtrShr<MeshInstance3D> meshIPnstance =
+  //     NewNode<MeshInstance3D>("meshes/cube/cube-tex.obj");
+
+  // PtrShr<MeshInstance3D> meshInstance =
+  //     NewNode<MeshInstance3D>("meshes/quad/quad.obj");
 
   // -----------------------------
 
@@ -63,6 +70,9 @@ void Engine::processInput() { Input::Update(); }
 
 void Engine::update() {
   // Update
+  if (Input::IsButtonDown(EButton::A)) {
+    iprintf("A button pressed\n");
+  }
 }
 
 void Engine::render() {
@@ -84,8 +94,7 @@ void Engine::render() {
 
 Engine::Engine() {
   // Initialize nitroFS
-  char nitroFSPath[32];
-  strcpy(nitroFSPath, "assets");
+  char nitroFSPath[] = {"assets"};
   char *nitroFSPathptr = nitroFSPath;
   if (!nitroFSInit(&nitroFSPathptr))
     exit(-1);

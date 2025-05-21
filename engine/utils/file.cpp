@@ -2,6 +2,7 @@
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
+#include <algorithm>
 
 namespace Utils::File {
 
@@ -11,15 +12,13 @@ FString ReadTextFile(const FString &path) {
   FString result;
   FILE *f = fopen(AssetPath(path).c_str(), "rb");
   if (!f) {
-    iprintf("No se pudo abrir el archivo\n");
+    // TODO: iprintf("No se pudo abrir el archivo\n");
   } else {
-    iprintf("Archivo abierto\n");
-
     fseek(f, 0, SEEK_END);
     size_t size = ftell(f);
     rewind(f);
 
-    TVector<uint8_t> buffer(size);
+    TVector<u8> buffer(size);
     fread(buffer.data(), 1, size, f);
     fclose(f);
 
@@ -30,28 +29,29 @@ FString ReadTextFile(const FString &path) {
   return std::move(result);
 }
 
-TVector<TVector<FVertex>> ReadObjFile(const FString &path) {
+TTuple<TVector<FShape>, TVector<FMaterial>> ReadObjFile(const FString &path) {
+  FString nitroPath = AssetPath(path);
+  FString baseFolder =
+      nitroPath.substr(0, nitroPath.find_last_of("/")).append("/");
+
   tinyobj::attrib_t attrib;
   TVector<tinyobj::shape_t> shapes;
   TVector<tinyobj::material_t> materials;
   FString err;
 
   bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err,
-                              AssetPath(path).c_str(),
-                              AssetPath(path + "/..").c_str(), true);
+                              nitroPath.c_str(), baseFolder.c_str(), true);
 
-  if (ret)
-    iprintf("Cargado correctamente\n");
-  else
-    iprintf("Error al cargar el archivo: %s\n", err.c_str());
+  if (!ret) {
+    // TODO: print error
+    return {TVector<FShape>(), TVector<FMaterial>()};
+  }
 
-  iprintf("Numero de materiales: %d\n", materials.size());
-
-  TVector<TVector<FVertex>> vertices;
+  TVector<FShape> shape_vertices;
 
   // Loop over shapes
   for (size_t s = 0; s < shapes.size(); s++) {
-    vertices.push_back({});
+    shape_vertices.push_back({});
     // Loop over faces(polygon)
     size_t index_offset = 0;
     for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
@@ -88,20 +88,23 @@ TVector<TVector<FVertex>> ReadObjFile(const FString &path) {
           tinyobj::real_t ty =
               attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
 
+          // I lost 3 days bacause of this :')
+          ty = 1.0f - std::clamp(ty, 0.0f, 1.0f);
+
           texCoords = FVector2(tx, ty);
         }
 
-        vertices[s].push_back(FVertex(positions, normals, texCoords));
+        shape_vertices[s].vertices.push_back(
+            FVertex(positions, normals, texCoords));
       }
 
       index_offset += fv;
 
       // per-face material
-      // shapes[s].mesh.material_ids[f];
+      // shape_materials.push_back(materials[shapes[s].mesh.material_ids[f]]);
     }
   }
 
-  return std::move(vertices);
+  return {shape_vertices, materials};
 }
-
 } // namespace Utils::File

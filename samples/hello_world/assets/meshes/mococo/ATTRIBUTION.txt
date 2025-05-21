@@ -1,0 +1,6 @@
+Model: mococo.obj
+Author: pyr0xene
+License: CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
+Source: https://sketchfab.com/3d-models/mococo-2c53699f4fe647beb52a7926821f5d9c
+
+This model is used under the terms of the Creative Commons Attribution-NonCommercial license.

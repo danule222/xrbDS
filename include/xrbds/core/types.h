@@ -19,9 +19,11 @@
 #include <bits/unique_ptr.h>
 #include <bits/shared_ptr.h>
 #include <calico/types.h>
+#include <tiny_obj_loader.h>
 #include <array>
 #include <vector>
 #include <string>
+#include <tuple>
 
 /////////////////////////////////////
 // MEMORY
@@ -71,6 +73,17 @@ template <typename T> using TVector = std::vector<T>;
  * @tparam S The size of the array.
  */
 template <typename T, size_t S> using TArray = std::array<T, S>;
+/**
+ * @brief Alias template for creating a std::tuple with a variadic list of
+ * types.
+ *
+ * This alias simplifies the usage of std::tuple by allowing the user to write
+ * TTuple<T...> instead of std::tuple<T...>.
+ *
+ * @tparam T... Variadic template parameter pack representing the types to be
+ * included in the tuple.
+ */
+template <typename... T> using TTuple = std::tuple<T...>;
 
 /////////////////////////////////////
 // BASIC TYPES
@@ -140,5 +153,11 @@ using FVector3 = glm::vec3;
  * @see glm::ivec3
  */
 using FVector3Int = glm::ivec3;
+
+/////////////////////////////////////
+// SHAPES
+/////////////////////////////////////
+
+using FMaterial = tinyobj::material_t;
 
 #endif // XRBDS_CORE_TYPES_H
