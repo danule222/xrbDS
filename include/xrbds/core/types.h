@@ -101,7 +101,7 @@ using FString = std::string;
  * @typedef FEntity
  * @brief Alias for a 32-bit signed integer type (int32_t).
  *
- * This type is used to represent integer values in the application.
+ * This type is used to represent entities in the application.
  */
 using FEntity = u32;
 
