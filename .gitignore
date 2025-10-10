@@ -42,3 +42,6 @@ build/
 
 # CMake files
 CMakeUserPresets.json
+
+# Finder files
+.DS_Store

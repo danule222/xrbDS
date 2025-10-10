@@ -16,10 +16,9 @@
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
-#include <bits/unique_ptr.h>
-#include <bits/shared_ptr.h>
 #include <calico/types.h>
 #include <tiny_obj_loader.h>
+#include <memory>
 #include <array>
 #include <vector>
 #include <string>
