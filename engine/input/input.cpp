@@ -21,3 +21,16 @@ bool Input::IsButtonHeld(EButton key) { return ButtonsHeldState & key; }
 bool Input::IsButtonDown(EButton key) { return ButtonsDownState & key; }
 
 bool Input::IsButtonUp(EButton key) { return ButtonsUpState & key; }
+
+FVector2Int Input::GetTouchPosition() {
+  touchPosition touch;
+  touchRead(&touch);
+
+  return FVector2Int{touch.px, touch.py};
+}
+
+bool Input::IsTouching() {
+  touchPosition touch;
+
+  return touchRead(&touch);
+}

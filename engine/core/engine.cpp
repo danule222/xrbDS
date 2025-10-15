@@ -73,6 +73,10 @@ void Engine::update() {
   if (Input::IsButtonDown(EButton::A)) {
     iprintf("A button pressed\n");
   }
+  if (Input::IsTouching()) {
+    FVector2Int touchPos = Input::GetTouchPosition();
+    iprintf("Touching at (%d, %d)\n", touchPos.x, touchPos.y);
+  }
 }
 
 void Engine::render() {

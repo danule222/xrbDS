@@ -107,6 +107,21 @@ public:
    */
   static bool IsButtonUp(EButton button);
 
+  /**
+   * @brief Gets the current touch position on the touchscreen.
+   * @return A FVector2Int representing the touch position in pixels.
+   * If the screen is not being touched, the values may be undefined.
+   */
+  static FVector2Int GetTouchPosition();
+
+  /**
+   * @brief Checks if any touch input is currently active on the screen.
+   *
+   * @return true if touch point is detected on the screen
+   * @return false if no touch point is currently detected
+   */
+  static bool IsTouching();
+
 private:
   /**
    * @brief Stores the state of buttons currently being held down.
