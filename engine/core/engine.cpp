@@ -13,6 +13,7 @@
 #include "scene/3d/node_3d.h"
 #include "utils/file.h"
 #include "scene/3d/mesh_instance_3d.h"
+#include "system/system_date.h"
 
 /////////////////////////////////////////////////////////
 // Main function
@@ -68,16 +69,7 @@ void Engine::run() {
 
 void Engine::processInput() { Input::Update(); }
 
-void Engine::update() {
-  // Update
-  if (Input::IsButtonDown(EButton::A)) {
-    iprintf("A button pressed\n");
-  }
-  if (Input::IsTouching()) {
-    FVector2Int touchPos = Input::GetTouchPosition();
-    iprintf("Touching at (%d, %d)\n", touchPos.x, touchPos.y);
-  }
-}
+void Engine::update() {}
 
 void Engine::render() {
   if (!ComponentManager::GetInstance())
